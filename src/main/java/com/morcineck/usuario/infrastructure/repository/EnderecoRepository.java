@@ -1,6 +1,6 @@
 package com.morcineck.usuario.infrastructure.repository;
 
-import com.morcinek.aprendendospring.infrastructure.entity.Endereco;
+import com.morcineck.usuario.infrastructure.entity.Endereco;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
