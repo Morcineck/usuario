@@ -1,4 +1,4 @@
-package com.morcinek.aprendendospring.infrastructure.exceptions;
+package com.morcineck.usuario.infrastructure.exceptions;
 
 public class ConflictException extends RuntimeException {
 
