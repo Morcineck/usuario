@@ -2,6 +2,8 @@ package com.morcineck.usuario.controller;
 
 
 import com.morcineck.usuario.business.UsuarioService;
+import com.morcineck.usuario.business.dto.EnderecoDTO;
+import com.morcineck.usuario.business.dto.TelefoneDTO;
 import com.morcineck.usuario.business.dto.UsuarioDTO;
 import com.morcineck.usuario.infrastructure.entity.Usuario;
 import com.morcineck.usuario.infrastructure.security.JwtUtil;
@@ -36,7 +38,7 @@ public class UsuarioController {
         return "Bearer" + jwtUtil.generateToken(authentication.getName());
     }
     @GetMapping
-    public ResponseEntity<Usuario> buscaUsiarioPorEmail(@RequestParam("email") String email) {
+    public ResponseEntity<UsuarioDTO> buscaUsiarioPorEmail(@RequestParam("email") String email) {
         return ResponseEntity.ok(usuarioService.buscarUsuarioPorEmail(email));
     }
     @DeleteMapping("/{email}")
@@ -49,5 +51,18 @@ public class UsuarioController {
     public ResponseEntity<UsuarioDTO> atualizaDadoUsuario(@RequestBody UsuarioDTO dto,
                                                           @RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(usuarioService.atualizaDadosUsuario(token, dto));
+    }
+
+    @PutMapping("/endereco")
+    public ResponseEntity<EnderecoDTO> atualizaEndereco(@RequestBody EnderecoDTO dto,
+                                                        @RequestParam("id") Long id){
+        return ResponseEntity.ok(usuarioService.atualizaEndereco(id, dto));
+    }
+
+
+    @PutMapping("/telefone")
+    public ResponseEntity<TelefoneDTO> atualizaTelefone(@RequestBody TelefoneDTO dto,
+                                                        @RequestParam("id") Long id){
+        return ResponseEntity.ok(usuarioService.atualizaTelefone(id, dto));
     }
 }
