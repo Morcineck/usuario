@@ -1,6 +1,7 @@
 package com.morcineck.usuario.controller;
 
 import com.morcineck.usuario.infrastructure.exceptions.ConflictException;
+import com.morcineck.usuario.infrastructure.exceptions.IllegalArgumentExcepiton;
 import com.morcineck.usuario.infrastructure.exceptions.ResourceNotFoundException;
 import com.morcineck.usuario.infrastructure.exceptions.UnauthorizedException;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException ex) {
         return new ResponseEntity<>(ex.getMessage(),  HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(IllegalArgumentExcepiton.class)
+    public ResponseEntity<String> handleIllegalArgumentExcepiton(IllegalArgumentException ex) {
+        return new ResponseEntity<>(ex.getMessage(),  HttpStatus.BAD_REQUEST);
     }
 
 }
