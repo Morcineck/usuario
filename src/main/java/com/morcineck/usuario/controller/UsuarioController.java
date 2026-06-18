@@ -7,7 +7,6 @@ import com.morcineck.usuario.business.dto.EnderecoDTO;
 import com.morcineck.usuario.business.dto.TelefoneDTO;
 import com.morcineck.usuario.business.dto.UsuarioDTO;
 import com.morcineck.usuario.infrastructure.client.ViaCepDTO;
-import com.morcineck.usuario.infrastructure.security.JwtUtil;
 import com.morcineck.usuario.infrastructure.security.SecurityConfig;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,9 +14,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,8 +24,6 @@ import org.springframework.web.bind.annotation.*;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
-    private final AuthenticationManager authenticationManager;
-    private final JwtUtil jwtUtil;
     private final ViaCepService viaCepService;
 
     @PostMapping
@@ -47,13 +41,8 @@ public class UsuarioController {
     @ApiResponse(responseCode = "200", description = "Usuário logado com sucesso")
     @ApiResponse(responseCode = "500", description = "Erro de servidor")
     @ApiResponse(responseCode = "401", description = "Credenciais inválidas")
-    public String login(@RequestBody UsuarioDTO usuarioDTo) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(usuarioDTo.getEmail(),
-                        usuarioDTo.getSenha())
-
-        );
-        return "Bearer " + jwtUtil.generateToken(authentication.getName());
+    public ResponseEntity<String> login(@RequestBody UsuarioDTO usuarioDTo) {
+      return ResponseEntity.ok(usuarioService.autenticarUsuario(usuarioDTo));
     }
 
     @GetMapping
