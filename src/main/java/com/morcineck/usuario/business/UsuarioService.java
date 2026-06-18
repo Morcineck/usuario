@@ -9,11 +9,18 @@ import com.morcineck.usuario.infrastructure.entity.Telefone;
 import com.morcineck.usuario.infrastructure.entity.Usuario;
 import com.morcineck.usuario.infrastructure.exceptions.ConflictException;
 import com.morcineck.usuario.infrastructure.exceptions.ResourceNotFoundException;
+import com.morcineck.usuario.infrastructure.exceptions.UnauthorizedException;
 import com.morcineck.usuario.infrastructure.repository.EnderecoRepository;
 import com.morcineck.usuario.infrastructure.repository.TelefoneRepository;
 import com.morcineck.usuario.infrastructure.repository.UsuarioRepository;
 import com.morcineck.usuario.infrastructure.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +31,7 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final UsuarioConverter usuarioConverter;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final EnderecoRepository enderecoRepository;
     private final TelefoneRepository telefoneRepository;
@@ -36,6 +44,21 @@ public class UsuarioService {
         return usuarioConverter.paraUsuarioDTO(
                 usuarioRepository.save(usuario)
         );
+    }
+
+    public String autenticarUsuario(UsuarioDTO usuarioDTO) {
+        try {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(usuarioDTO.getEmail(),
+                        usuarioDTO.getSenha())
+
+        );
+
+        return "Bearer " + jwtUtil.generateToken(authentication.getName());
+
+    } catch (BadCredentialsException | UsernameNotFoundException | AuthorizationDeniedException e) {
+        throw new UnauthorizedException("Usuário ou senha inválidos" , e.getCause());
+        }
     }
 
     public void emailExiste(String email) {
@@ -62,7 +85,7 @@ public class UsuarioService {
                             )
             );
         } catch (ResourceNotFoundException e) {
-            throw new ResourceNotFoundException("Email não encontrato " + email);
+            throw new ResourceNotFoundException("Email não encontrado " + email);
         }
     }
 
@@ -79,11 +102,11 @@ public class UsuarioService {
         //Criptografia de senha
         dto.setSenha(dto.getSenha() != null ? passwordEncoder.encode(dto.getSenha()) : null);
 
-        //Busca os dados do usuárui no banco de dados
+        //Busca os dados do usuário no banco de dados
         Usuario usuarioEntity = usuarioRepository.findByEmail(email).orElseThrow(() ->
                 new ResourceNotFoundException("Email não encontrado "));
 
-        //Mesclou os dados que rebemos na requisição DTO com os dados do banco de dados
+        //Mesclou os dados que recebemos na requisição DTO com os dados do banco de dados
         Usuario usuario = usuarioConverter.updateUsuario(dto, usuarioEntity);
 
         //Salva os dados do usuário convertido e depois pega o retorno e converte para UsuarioDTO
