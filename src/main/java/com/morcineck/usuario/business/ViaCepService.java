@@ -2,6 +2,7 @@ package com.morcineck.usuario.business;
 
 import com.morcineck.usuario.infrastructure.client.ViaCepClient;
 import com.morcineck.usuario.infrastructure.client.ViaCepDTO;
+import com.morcineck.usuario.infrastructure.exceptions.IllegalArgumentBusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class ViaCepService {
         String cepFormatado = cep.replace(" ", "").replace("-", "");
 
         if (!cepFormatado.matches("\\d+") || !Objects.equals(cepFormatado.length(),  8)) {
-            throw new IllegalArgumentException("O cep contém caracteres inválidas, favor verificar");
+            throw new IllegalArgumentBusinessException("O cep contém caracteres inválidos, favor verificar");
         }
 
         return cepFormatado;

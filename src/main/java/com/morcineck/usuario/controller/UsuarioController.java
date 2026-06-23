@@ -135,7 +135,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/endereco/{cep}")
-    public ResponseEntity<ViaCepDTO> bucasrDadosCep(@PathVariable("cep") String cep) {
+    public ResponseEntity<ViaCepDTO> buscarDadosCep(@PathVariable("cep") String cep) {
         return ResponseEntity.ok(viaCepService.buscaDadosEndereco(cep));
 
     }
