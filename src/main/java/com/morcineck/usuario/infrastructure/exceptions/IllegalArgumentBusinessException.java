@@ -1,11 +1,11 @@
 package com.morcineck.usuario.infrastructure.exceptions;
 
-public class IllegalArgumentException extends RuntimeException {
-    public IllegalArgumentException(String message) {
+public class IllegalArgumentBusinessException extends RuntimeException {
+    public IllegalArgumentBusinessException(String message) {
         super(message);
     }
 
-    public IllegalArgumentException(String message, Throwable throwable) {
+    public IllegalArgumentBusinessException(String message, Throwable throwable) {
         super(message, throwable);
     }
 }

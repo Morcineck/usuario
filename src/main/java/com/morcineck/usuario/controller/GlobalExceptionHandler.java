@@ -1,7 +1,7 @@
 package com.morcineck.usuario.controller;
 
 import com.morcineck.usuario.infrastructure.exceptions.ConflictException;
-import com.morcineck.usuario.infrastructure.exceptions.IllegalArgumentExcepiton;
+import com.morcineck.usuario.infrastructure.exceptions.IllegalArgumentBusinessException;
 import com.morcineck.usuario.infrastructure.exceptions.ResourceNotFoundException;
 import com.morcineck.usuario.infrastructure.exceptions.UnauthorizedException;
 import com.morcineck.usuario.infrastructure.exceptions.dto.ErrorResponseDTO;
@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDateTime;
 
@@ -33,7 +32,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(buildError(HttpStatus.CONFLICT.value(),
                 ex.getMessage(),
                 request.getRequestURI(),
-                "Not Found"
+                "Conflict"
         ));
     }
 
@@ -42,8 +41,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(IllegalArgumentExcepiton.class)
-    public ResponseEntity<String> handleIllegalArgumentExcepiton(IllegalArgumentException ex) {
+    @ExceptionHandler(IllegalArgumentBusinessException.class)
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentBusinessException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
