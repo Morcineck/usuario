@@ -62,13 +62,8 @@ public class UsuarioService {
     }
 
     public void emailExiste(String email) {
-        try {
-            boolean existe = verificaEmailExistente(email);
-            if (existe) {
-                throw new ConflictException("Email já cadastrado " + email);
-            }
-        } catch (ConflictException e) {
-            throw new ConflictException("Email já cadastrado " + e.getCause());
+        if (verificaEmailExistente(email)) {
+            throw new ConflictException("Email já cadastrado " + email);
         }
     }
 

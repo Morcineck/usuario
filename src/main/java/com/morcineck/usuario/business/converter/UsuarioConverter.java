@@ -138,7 +138,7 @@ public class UsuarioConverter {
                 .complemento(dto.getComplemento())
                 .cidade(dto.getCidade())
                 .estado(dto.getEstado())
-                .usuario_id(idUsuario)
+                .usuarioId(idUsuario)
                 .build();
     }
 
@@ -146,7 +146,7 @@ public class UsuarioConverter {
         return Telefone.builder()
                 .numero(dto.getNumero())
                 .ddd(dto.getDdd())
-                .usuario_id(idUsuario)
+                .usuarioId(idUsuario)
                 .build();
     }
 
